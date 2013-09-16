@@ -1,0 +1,6 @@
+#Wed Sep 11 15:40:29 JST 2013
+ID=My Name
+ADDRESS=tcp\://localhost\:61616
+GROUP=Default Group
+ICON=icons/empty_big.gif
+PASSWORD=My Password

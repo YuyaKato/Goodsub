@@ -1,0 +1,79 @@
+package Goodsub;
+
+import java.io.*;
+import java.net.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class SyncClient {
+
+	/**
+	 * @param args
+	 */
+
+	static final String IP = "192.168.1.159";
+	static final int SEND_PORT = 10000;
+	static final int GET_PORT = 10001;
+	
+	static List<ObjectOutputStream> outputs = new ArrayList<ObjectOutputStream>();
+	
+	public static void main(String[] args) throws Exception {
+		new SyncClient().run();
+	}
+	
+	static TextFeald ctfd;
+	static ObjectOutputStream oos;
+	
+	void run() throws Exception{
+		// TODO Auto-generated method stub
+		
+		// テキストエリアの生成
+		ctfd = new TextFeald("client", this);
+		ctfd.setVisible(true);
+		
+		// クライアント送信用
+		Thread sth = new Thread(){
+			public void run(){
+				try {
+					Socket sock = new Socket(IP, SEND_PORT);
+					OutputStream out = sock.getOutputStream();
+					oos = new ObjectOutputStream(out);
+				} catch (UnknownHostException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		};
+		sth.start();
+		
+//		while(true){
+//			/*
+//			ctfd.button.addActionListener(
+//					new ActionListener(){
+//						public void actionPerformed(ActionEvent event){
+//							try {
+//								oos.writeObject(ctfd.jta.getText());
+//							} catch (IOException e) {
+//								e.printStackTrace();
+//							}
+//						}
+//					}
+//					);
+//					*/
+//			oos.writeObject(ctfd.text);
+//			
+//		}
+	}
+
+	static public void keyTyped() {
+		try {
+			oos.writeObject(ctfd.getText());
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+	
+}

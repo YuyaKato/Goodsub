@@ -1,0 +1,61 @@
+package Goodsub;
+
+import java.io.*;
+import java.net.*;
+
+public class SyncClient {
+
+	/**
+	 * @param args
+	 */
+
+	static final String IP = "192.168.1.159";
+	
+	public static void main(String[] args) throws Exception {
+		new SyncClient().run();
+	}
+	
+	TextFeald ctfd;
+	OutputStream out;
+	
+	void run(){
+		// TODO Auto-generated method stub
+		
+		
+		
+		// テキストエリアの生成
+		ctfd = new TextFeald("client", this);
+		ctfd.setVisible(true);
+		
+		// ソケットの準備
+		Socket sock = new Socket(IP, SyncServer.DEFAULT_PORT);
+		 out = sock.getOutputStream();
+		
+		
+		final ObjectOutputStream oos = new ObjectOutputStream(out);
+		
+//		while(true){
+//			/*
+//			ctfd.button.addActionListener(
+//					new ActionListener(){
+//						public void actionPerformed(ActionEvent event){
+//							try {
+//								oos.writeObject(ctfd.jta.getText());
+//							} catch (IOException e) {
+//								e.printStackTrace();
+//							}
+//						}
+//					}
+//					);
+//					*/
+//			oos.writeObject(ctfd.text);
+//			
+//		}
+	}
+
+	public void keyTyped() {
+		// TODO Auto-generated method stub
+		oos.writeObject(ctfd.text);
+	}
+	
+}

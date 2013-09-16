@@ -1,0 +1,26 @@
+package Goodsub;
+
+import java.io.*;
+import java.net.*;
+
+public class SyncServer {
+
+	/**
+	 * @param args
+	 */
+	
+	static final int DEFAULT_PORT = 10000;
+	static ServerSocket serverSocket;
+	
+	public static void main(String[] args) throws Exception {
+		// TODO Auto-generated method stub
+		
+		serverSocket = new ServerSocket(DEFAULT_PORT);
+		final Socket sock = serverSocket.accept();
+		InputStream in = sock.getInputStream();
+		ObjectInputStream ois = new ObjectInputStream(in);
+		Object obj = ois.readObject();
+		
+	}
+
+}

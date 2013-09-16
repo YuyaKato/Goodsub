@@ -1,0 +1,131 @@
+package Goodsub;
+
+import java.io.*;
+import java.net.*;
+import java.util.*;
+
+public class SyncServer {
+
+	/**
+	 * @param args
+	 */
+
+	static final int GET_PORT = 10000;   // サーバ受信用ポート番号
+	static final int SEND_PORT = 10001;  // サーバ送信用ポート番号
+	// static Socket sock;
+	TextFeald stfd;
+	List<ObjectInputStream> inputs = new ArrayList<ObjectInputStream>();
+	List<ObjectOutputStream> outputs = new ArrayList<ObjectOutputStream>();
+
+	
+	public static void main(String[] args) throws Exception {
+		// TODO Auto-generated method stub
+
+		// final TextFeald stfd;
+		// サーバソケットの準備
+		// serverSocket = new ServerSocket(DEFAULT_PORT);
+		// final Socket sock = serverSocket.accept();
+		// System.out.println("Server accept");
+
+		new SyncServer().run();
+
+	}
+	void run() throws Exception{
+
+		//テキストエリアを開く
+		stfd = new TextFeald("sever", null);
+		stfd.setVisible(true);
+
+		// 受信用スレッド
+		Thread gth = new Thread(){
+			public void run(){
+				try {
+					ServerSocket serverSocket = new ServerSocket(GET_PORT);
+					while(true){
+						inputText(serverSocket);
+					}
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		};
+		gth.start();
+		/*		
+		while(true){
+			for(ObjectInputStream input : inputs){
+				Object obj = input.readObject();
+				showText(obj);
+			}
+		}
+		 */
+		
+		// 送信用ソケット
+		Thread sth = new Thread(){
+			public void run(){
+				try {
+					ServerSocket serverSocket = new ServerSocket(SEND_PORT);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+		};
+		sth.start();
+
+		/*		
+		while(true){
+			if(ois != null){
+				obj = ois.readObject();
+			}
+			if(obj instanceof String){
+				stfd.jta.setText((String) obj);	
+			}
+		}
+		 */
+
+		/*
+		try{
+			InputStream in = sock.getInputStream();
+			ObjectInputStream ois = new ObjectInputStream(in);
+
+			while(true){
+				Object obj = ois.readObject();
+				if(obj instanceof String){
+					stfd.jta.setText((String) obj);	
+				}
+			}		
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
+		 */
+
+	}
+
+	void inputText(ServerSocket isock) throws Exception{
+		
+		ObjectInputStream ois;
+
+		Socket sock = isock.accept();
+		System.out.println("Server accept");
+		InputStream in = sock.getInputStream();
+		ois = new ObjectInputStream(in);
+		inputs.add(ois);
+	}
+	
+	void outputText(ServerSocket osock) throws Exception{
+		
+		Socket sock = osock.accept();
+		OutputStream out = sock.getOutputStream();
+		ObjectOutputStream oos = new ObjectOutputStream(out);
+		outputs.add(oos);
+	}
+
+	void showText(Object sobj){
+		if(sobj instanceof String){
+			stfd.jta.setText((String) sobj);	
+		}	
+	}
+
+}

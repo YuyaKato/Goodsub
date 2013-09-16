@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+<fullyQualifiedTypeName name="java.awt.Container"/>
+<fullyQualifiedTypeName name="java.awt.BorderLayout"/>
+<fullyQualifiedTypeName name="java.awt.Event"/>
+<fullyQualifiedTypeName name="java.awt.event.ActionListener"/>
+<fullyQualifiedTypeName name="java.net.ServerSocket"/>
+<fullyQualifiedTypeName name="java.io.InputStream"/>
+<fullyQualifiedTypeName name="java.lang.System"/>
+<fullyQualifiedTypeName name="java.net.Socket"/>
+<fullyQualifiedTypeName name="java.io.OutputStream"/>
+<fullyQualifiedTypeName name="Goodsub.TextFeald"/>
+<fullyQualifiedTypeName name="java.awt.event.ActionEvent"/>
+<fullyQualifiedTypeName name="java.io.ObjectOutputStream"/>
+<fullyQualifiedTypeName name="java.awt.event.KeyListener"/>
+<fullyQualifiedTypeName name="javax.swing.JFrame"/>
+<fullyQualifiedTypeName name="java.util.ArrayList"/>
+<fullyQualifiedTypeName name="java.util.List"/>
+</qualifiedTypeNameHistroy>
