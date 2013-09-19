@@ -2,28 +2,26 @@ package Goodsub;
 
 import java.io.*;
 import java.net.*;
-import java.util.ArrayList;
-import java.util.List;
 
-public class SyncClient {
+public class SendClient {
 
 	/**
 	 * @param args
 	 */
 
-	static final String IP = "192.168.0.3";    // デフォルトIP
+	static final String IP = "192.168.1.159";    // デフォルトIP
 	static final int SEND_PORT = 10000;        // 送信用ポート番号
 	static final int GET_PORT = 10001;         // 受信用ポート番号
 	
-	static TextFeald ctfd;   // クライアント用テキストフィールド
+	private TextFeald sctfd;   // クライアント送信用テキストフィールド
+	TextFeald gctfd; // クライアント受信用テキストフィールド
 	ObjectOutputStream oos;
 	ObjectInputStream ois;
 	Object obj;              // 受信したオブジェクトを格納
 	
-	// static List<ObjectOutputStream> outputs = new ArrayList<ObjectOutputStream>();
 	
 	public static void main(String[] args) throws Exception {
-		new SyncClient().run();
+		new SendClient().run();
 	}
 	
 	
@@ -31,14 +29,20 @@ public class SyncClient {
 		// TODO Auto-generated method stub
 		
 		// テキストエリアの生成
-		ctfd = new TextFeald("client", this);
-		ctfd.setVisible(true);
+		// ctfd = new TextFeald("client", this);
+		// ctfd.setVisible(true);
+		
+		sctfd = new TextFeald("sclient", this);
+		gctfd = new TextFeald("gclient", this);
 		
 		// 送信用
 		Thread sth = new Thread(){
+			private Socket sock;
+
 			public void run(){
+				sctfd.setVisible(true);
 				try {
-					Socket sock = new Socket(IP, SEND_PORT);
+					sock = new Socket(IP, SEND_PORT);
 					OutputStream out = sock.getOutputStream();
 					oos = new ObjectOutputStream(out);
 				} catch (UnknownHostException e) {
@@ -56,6 +60,7 @@ public class SyncClient {
 		Thread gth = new Thread(){
 			public void run(){
 				Socket sock;
+				// gctfd.setVisible(true);
 				try {
 					sock = new Socket(IP, GET_PORT);
 					InputStream in = sock.getInputStream();
@@ -77,7 +82,7 @@ public class SyncClient {
 								// System.out.println(obj);
 								if(obj instanceof String){
 									// System.out.println("client get: " + obj);
-									ctfd.jta.setText((String) obj);
+									gctfd.jta.setText((String) obj);
 								}
 							}
 						}
@@ -95,29 +100,12 @@ public class SyncClient {
 		};
 		gth.start();
 		
-//		while(true){
-//			/*
-//			ctfd.button.addActionListener(
-//					new ActionListener(){
-//						public void actionPerformed(ActionEvent event){
-//							try {
-//								oos.writeObject(ctfd.jta.getText());
-//							} catch (IOException e) {
-//								e.printStackTrace();
-//							}
-//						}
-//					}
-//					);
-//					*/
-//			oos.writeObject(ctfd.text);
-//			
-//		}
 	}
 
 	// キーボードをタイプするたびにオブジェクトを出力
 	public void keyTyped() {
 		try {
-			oos.writeObject(ctfd.text);
+			oos.writeObject(sctfd.jta.getText());
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

@@ -7,7 +7,11 @@ import javax.swing.*;
 
 public class TextFeald extends JFrame implements KeyListener {
 
-	private SyncClient client;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private SendClient client;
 	/**
 	 * @param args
 	 */
@@ -16,11 +20,11 @@ public class TextFeald extends JFrame implements KeyListener {
 	static final int MAXCOLMNS = 20;
 	
 	JTextArea jta;       // テキストエリア
-	static String text;  // テキストエリアの文字列
-	JButton button;      // sendボタン
+	String text;  // テキストエリアの文字列
+	// JButton button;      // sendボタン
 	
 	
-	TextFeald(String title, SyncClient client){
+	TextFeald(String title, SendClient client){
 		
 		this.client = client;
 		
@@ -33,8 +37,8 @@ public class TextFeald extends JFrame implements KeyListener {
 		setSize(200,200);
 		
 		// ボタンの配置
-		button = new JButton("send");
-		cont.add(button,BorderLayout.SOUTH);
+		// button = new JButton("send");
+		// cont.add(button,BorderLayout.SOUTH);
 		
 		// キーボードリスナーの追加
 		jta.addKeyListener(this);
@@ -66,32 +70,36 @@ public class TextFeald extends JFrame implements KeyListener {
 	@Override
 	public void keyTyped(KeyEvent e) {
 		// TODO Auto-generated method stub
-		// System.out.println("KeyTyped");
 		
 		//　キーボードがタイプされたときに呼ばれる
-		System.out.println("Press: " + e.getKeyChar());
+		// System.out.println("Press: " + e.getKeyChar());
+		/*
 		if(text == null){
 			text = String.valueOf(e.getKeyChar());
 		}else{
 			text = text + String.valueOf(e.getKeyChar());
 		}
-		
+		*/
+		/*
 		if(client != null){
 			client.keyTyped();
 		}
+		*/
 	}
 
 	@Override
 	public void keyPressed(KeyEvent e) {
 		// TODO Auto-generated method stub
-		// System.out.println("KeyPressed");
-		// System.out.println("Press: " + e.getKeyChar());
+
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
 		// TODO Auto-generated method stub
-		// System.out.println("KeyReleased");
+
+		if(client != null){
+			client.keyTyped();
+		}
 	}
 
 

@@ -13,9 +13,11 @@ public class SyncServer {
 	static final int GET_PORT = 10000;   // 受信用ポート番号
 	static final int SEND_PORT = 10001;  // 送信用ポート番号
 	TextFeald stfd;                      // サーバ用テキストフィールド
+	static int member;
 	
 	// オブジェクトの出力先を格納
 	List<ObjectOutputStream> outputs = new ArrayList<ObjectOutputStream>();
+	
 	
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
@@ -25,10 +27,10 @@ public class SyncServer {
 	
 	
 	void run() throws Exception{
-
+		
 		//テキストエリアを開く
 		stfd = new TextFeald("sever", null);
-		// stfd.setVisible(true);
+		stfd.setVisible(true);
 
 		// 受信用スレッド
 		Thread gth = new Thread(){
@@ -40,6 +42,8 @@ public class SyncServer {
 					while(true){
 						final Socket sock = serverSocket.accept();
 						System.out.println("gServer accept");
+
+						GetClient.addMember();
 						
 						// オブジェクトの読み込み
 						Thread gth2 = new Thread(){
@@ -66,20 +70,14 @@ public class SyncServer {
 			}
 		};
 		gth.start();
-		/*		
-		while(true){
-			for(ObjectInputStream input : inputs){
-				Object obj = input.readObject();
-				showText(obj);
-			}
-		}
-		 */
 		
 		// 送信用ソケット
 		Thread sth = new Thread(){
+			private ServerSocket serverSocket;
+
 			public void run(){
 				try {
-					final ServerSocket serverSocket = new ServerSocket(SEND_PORT);
+					serverSocket = new ServerSocket(SEND_PORT);
 					while(true){
 						final Socket sock = serverSocket.accept();
 						System.out.println("sServer accept");
@@ -91,7 +89,12 @@ public class SyncServer {
 								try {
 									out = sock.getOutputStream();
 									ObjectOutputStream oos = new ObjectOutputStream(out);
-									oos.writeObject(SyncClient.ctfd.text);
+									/*
+									SyncClient sref = new SyncClient();
+									System.out.println(stfd.jta.getText());
+									sref.setText(stfd.jta.getText());
+									*/
+									oos.writeObject(stfd.jta.getText());
 									outputs.add(oos);
 								} catch (IOException e) {
 									// TODO Auto-generated catch block
@@ -100,8 +103,7 @@ public class SyncServer {
 							}
 						};
 						sth2.start();
-
-						// outputText(serverSocket);
+						
 					}
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
@@ -114,50 +116,8 @@ public class SyncServer {
 			}
 		};
 		sth.start();
-		
-		while(true){
-			
-		}
-
-		/*		
-		while(true){
-			if(ois != null){
-				obj = ois.readObject();
-			}
-			if(obj instanceof String){
-				stfd.jta.setText((String) obj);	
-			}
-		}
-		 */
-
-		/*
-		try{
-			InputStream in = sock.getInputStream();
-			ObjectInputStream ois = new ObjectInputStream(in);
-
-			while(true){
-				Object obj = ois.readObject();
-				if(obj instanceof String){
-					stfd.jta.setText((String) obj);	
-				}
-			}		
-		}catch(Exception ex){
-			ex.printStackTrace();
-		}
-		 */
-
 	}
 	
-	/*
-	void outputText(ServerSocket osock) throws Exception{
-		
-		Socket sock = osock.accept();
-		System.out.println("sServer accept");
-		OutputStream out = sock.getOutputStream();
-		ObjectOutputStream oos = new ObjectOutputStream(out);
-		outputs.add(oos);
-	}
-	*/
 
 	// サーバテキストフィールドに表示
 	void showText(ObjectInputStream sois) throws IOException{
@@ -176,6 +136,7 @@ public class SyncServer {
 			stfd.jta.setText((String) sobj);	
 		}	
 	}
+	
 	
 	// オブジェクトの出力
 	void send(String str) throws IOException{
