@@ -10,39 +10,41 @@ public class SendClient {
 	 */
 
 	static final String IP = "192.168.1.159";    // デフォルトIP
-	static final int SEND_PORT = 10000;        // 送信用ポート番号
-	static final int GET_PORT = 10001;         // 受信用ポート番号
+	int sendPort = 10000;        // 送信用ポート番号
+	// static final int GET_PORT = 10001;         // 受信用ポート番号
 	
-	private TextFeald sctfd;   // クライアント送信用テキストフィールド
-	TextFeald gctfd; // クライアント受信用テキストフィールド
+	
+	TextFeald sctfd;   // クライアント送信用テキストフィールド
+	// TextFeald gctfd; // クライアント受信用テキストフィールド
 	ObjectOutputStream oos;
-	ObjectInputStream ois;
-	Object obj;              // 受信したオブジェクトを格納
+	// ObjectInputStream ois;
+	// Object obj;              // 受信したオブジェクトを格納
+	private static int member = 0;
 	
 	
 	public static void main(String[] args) throws Exception {
-		new SendClient().run();
+		new SendClient().run(0);
 	}
 	
 	
-	void run() throws Exception{
+	void run(final int port) throws Exception{
 		// TODO Auto-generated method stub
 		
-		// テキストエリアの生成
-		// ctfd = new TextFeald("client", this);
-		// ctfd.setVisible(true);
-		
+		// テキストエリア生成
 		sctfd = new TextFeald("sclient", this);
-		gctfd = new TextFeald("gclient", this);
+		// gctfd = new TextFeald("gclient", this);
 		
-		// 送信用
+		// 送信用スレッド
 		Thread sth = new Thread(){
 			private Socket sock;
 
 			public void run(){
 				sctfd.setVisible(true);
 				try {
-					sock = new Socket(IP, SEND_PORT);
+					// 接続・送信処理
+					sendPort += member*2;
+					System.out.println("sendport : " + sendPort);
+					sock = new Socket(IP, port);
 					OutputStream out = sock.getOutputStream();
 					oos = new ObjectOutputStream(out);
 				} catch (UnknownHostException e) {
@@ -55,53 +57,10 @@ public class SendClient {
 			}
 		};
 		sth.start();
-		
-		// 受信用
-		Thread gth = new Thread(){
-			public void run(){
-				Socket sock;
-				// gctfd.setVisible(true);
-				try {
-					sock = new Socket(IP, GET_PORT);
-					InputStream in = sock.getInputStream();
-					ois = new ObjectInputStream(in);
-					
-					// オブジェクトの読み込み
-					Thread gth2 = new Thread(){
-						public void run(){
-							while(true){
-								try {
-									obj = ois.readObject();
-								} catch (ClassNotFoundException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								} catch (IOException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								}
-								// System.out.println(obj);
-								if(obj instanceof String){
-									// System.out.println("client get: " + obj);
-									gctfd.jta.setText((String) obj);
-								}
-							}
-						}
-					};
-					gth2.start();
-				} catch (UnknownHostException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-			}
-		};
-		gth.start();
-		
+	
 	}
 
+	
 	// キーボードをタイプするたびにオブジェクトを出力
 	public void keyTyped() {
 		try {
@@ -109,6 +68,11 @@ public class SendClient {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
+	}
+	
+	static void setMember(int num){
+		SendClient.member = num;
+		System.out.println("setMember(send) : " + member);
 	}
 	
 }
