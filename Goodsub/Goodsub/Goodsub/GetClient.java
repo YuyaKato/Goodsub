@@ -6,14 +6,15 @@ import java.net.*;
 
 public class GetClient {
 	
+
+	static final String IP = "192.168.1.159"; // デフォルトIP
+
+	private int getPort = 10003;              // 受信用ポート番号	
+	private TextFeald gctfd;                  // クライアント受信用テキストフィールド
+	private ObjectInputStream ois;
+	private Object obj;                       // 受信したオブジェクトを格納
 	
-	static final String IP = "192.168.1.159";    // デフォルトIP
-	int getPort = 10003;         // 受信用ポート番号
-	
-	TextFeald gctfd; // クライアント受信用テキストフィールド
-	ObjectInputStream ois;
-	Object obj;              // 受信したオブジェクトを格納
-	private static int member = 0;
+	private static int member = SyncServer.member;
 
 	/**
 	 * @param args
@@ -27,7 +28,7 @@ public class GetClient {
 	public void run(final int port){
 		
 		// テキストエリアの生成
-		gctfd = new TextFeald("gclient" + member, null);
+		gctfd = new TextFeald("gclient", null);
 		
 		// 受信用スレッド
 		Thread gth = new Thread(){
@@ -73,9 +74,11 @@ public class GetClient {
 			}
 		};
 		gth.start();	
+	
 	}
 	
 	
+	// クライアント数のセット
 	static void setMember(int num){
 		member = num;
 		System.out.println("setMember(get) : " + member);

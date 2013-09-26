@@ -11,20 +11,18 @@ public class TextFeald extends JFrame implements KeyListener {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private SendClient client;
+	private SendClient2 client;
 	/**
 	 * @param args
 	 */
 	
-	static final int MAXROWS = 20;
-	static final int MAXCOLMNS = 20;
+	static final int MAXROWS = 20;   // テキストエリアの列数
+	static final int MAXCOLMNS = 20; // テキストエリアの行数
 	
-	JTextArea jta;       // テキストエリア
-	// String text;  // テキストエリアの文字列
-	// JButton button;      // sendボタン
+	JTextArea jta;                   // テキストエリア
 	
 	
-	TextFeald(String title, SendClient client){
+	TextFeald(String title, SendClient2 client){
 		
 		this.client = client;
 		
@@ -63,10 +61,12 @@ public class TextFeald extends JFrame implements KeyListener {
 
 	}
 
+	// キーボードタイプ後リリースされた時
 	@Override
 	public void keyReleased(KeyEvent e) {
 		// TODO Auto-generated method stub
 
+		// SendClientクラスで処理
 		if(client != null){
 			client.keyTyped();
 		}

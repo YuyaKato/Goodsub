@@ -9,17 +9,13 @@ public class SendClient {
 	 * @param args
 	 */
 
-	static final String IP = "192.168.1.159";    // デフォルトIP
-	int sendPort = 10000;        // 送信用ポート番号
-	// static final int GET_PORT = 10001;         // 受信用ポート番号
+	static final String IP = "192.168.1.159"; // デフォルトIP
 	
+	private int sendPort = 10000;             // 送信用ポート番号	
+	private TextFeald sctfd;                  // クライアント送信用テキストフィールド
+	private ObjectOutputStream oos;
 	
-	TextFeald sctfd;   // クライアント送信用テキストフィールド
-	// TextFeald gctfd; // クライアント受信用テキストフィールド
-	ObjectOutputStream oos;
-	// ObjectInputStream ois;
-	// Object obj;              // 受信したオブジェクトを格納
-	private static int member = 0;
+	private static int member = SyncServer.member;
 	
 	
 	public static void main(String[] args) throws Exception {
@@ -31,15 +27,14 @@ public class SendClient {
 		// TODO Auto-generated method stub
 		
 		// テキストエリア生成
-		sctfd = new TextFeald("sclient", this);
-		// gctfd = new TextFeald("gclient", this);
+		// sctfd = new TextFeald("sclient", this);
+		sctfd.setVisible(true);
 		
 		// 送信用スレッド
 		Thread sth = new Thread(){
 			private Socket sock;
 
 			public void run(){
-				sctfd.setVisible(true);
 				try {
 					// 接続・送信処理
 					sendPort += member*2;
@@ -64,14 +59,17 @@ public class SendClient {
 	// キーボードをタイプするたびにオブジェクトを出力
 	public void keyTyped() {
 		try {
+			// sendテキストエリアの文字列を全て取得して送信
 			oos.writeObject(sctfd.jta.getText());
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 	}
 	
+	
+	// クライアント数をセット
 	static void setMember(int num){
-		SendClient.member = num;
+		member = num;
 		System.out.println("setMember(send) : " + member);
 	}
 	
