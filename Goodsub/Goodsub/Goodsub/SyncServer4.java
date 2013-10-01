@@ -60,7 +60,7 @@ public class SyncServer4 {
 				if(obj instanceof Integer){		// Integerなら部屋番号かスクロールバーのvalue
 					if((int) obj <0){			// マイナスなら部屋番号
 						conn.setRoomNum((int) obj);
-						frame.println("room number is [" + conn.getRoomNum() + "]");
+						frame.println("room number is [" + conn.getRoomNum()*(-1) + "]");
 					}
 					else if((int) obj >= 0){	// 0以上ならスクロールバーのvalue
 						int value = (int) obj;
